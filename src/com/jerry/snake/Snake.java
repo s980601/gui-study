@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class Snake {
     public static final int DEFAULT_LEN=3; //默认长度3
+//    public static final int MOVE_LEN=25;
     public static final int HEAD_UP=0;
     public static final int HEAD_DOWN=1;
     public static final int HEAD_LEFT=2;
@@ -30,6 +31,53 @@ public class Snake {
             postion[i]=new Point(x,y);
             x-=25;
         }
+    }
+
+    public void setDirection(int direction)
+    {
+        this.direction=direction;
+    }
+
+    public void move()
+    {
+        for (int i=length-1;i>0;i--)
+        {
+            postion[i].x=postion[i-1].x;
+            postion[i].y=postion[i-1].y;
+        }
+        if(direction == HEAD_UP)
+        {
+            postion[0].y-=Data.DEFAULT_BODY_SIZE;
+            if(postion[0].y<Data.DEFAULT_TOP)
+            {
+                postion[0].y=Data.DEFAULT_BOTTOM-Data.DEFAULT_BODY_SIZE;
+            }
+        }
+        else if(direction == HEAD_DOWN)
+        {
+            postion[0].y+=Data.DEFAULT_BODY_SIZE;
+            if(postion[0].y>(Data.DEFAULT_BOTTOM-Data.DEFAULT_BODY_SIZE))
+            {
+                postion[0].y=Data.DEFAULT_TOP;
+            }
+        }
+        else if(direction == HEAD_LEFT)
+        {
+            postion[0].x-=Data.DEFAULT_BODY_SIZE;
+            if(postion[0].x<Data.DEFAULT_LEFT)
+            {
+                postion[0].x=Data.DEFAULT_RIGHT-Data.DEFAULT_BODY_SIZE;
+            }
+        }
+        else if(direction == HEAD_RIGHT)
+        {
+            postion[0].x+=Data.DEFAULT_BODY_SIZE;
+            if(postion[0].x>(Data.DEFAULT_RIGHT-Data.DEFAULT_BODY_SIZE))
+            {
+                postion[0].x=Data.DEFAULT_LEFT;
+            }
+        }
+
     }
 
     public void paint(Component c, Graphics g)
