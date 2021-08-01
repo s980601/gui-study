@@ -16,14 +16,28 @@ public class Snake {
     private Point []postion;//蛇的位置
     private int direction; //头的朝向
 
+    public int getLength() {
+        return length;
+    }
 
     public Snake(int length) {
         this.length = length;
-        direction=HEAD_RIGHT;
         postion=new Point[Data.DEFAULT_WIDTH/25*Data.DEFAULT_HEIGHT/25];
 //        int x=getRandomNumberInRange(0,Data.DEFAULT_WIDTH/Data.DEFAULT_BODY_SIZE-1);
 //        int y=getRandomNumberInRange(0,Data.DEFAULT_HEIGHT/Data.DEFAULT_BODY_SIZE-1);
 //        postion[0].setLocation(x*Data.DEFAULT_BODY_SIZE,y*Data.DEFAULT_BODY_SIZE);
+
+        for (int i=0;i< postion.length;i++)
+        {
+            postion[i]=new Point(0,0);
+        }
+        reset();
+    }
+
+    public void reset()
+    {
+        this.length = DEFAULT_LEN;
+        direction=HEAD_RIGHT;
         int x=Data.DEFAULT_LEFT+ 250;
         int y=Data.DEFAULT_TOP+ 25;
         for (int i=0;i<length;i++)
@@ -33,51 +47,87 @@ public class Snake {
         }
     }
 
+    public void growUp()
+    {
+        length++;
+    }
+
     public void setDirection(int direction)
     {
         this.direction=direction;
     }
 
-    public void move()
+    private Point getNewHead()
     {
-        for (int i=length-1;i>0;i--)
-        {
-            postion[i].x=postion[i-1].x;
-            postion[i].y=postion[i-1].y;
-        }
+        Point point=new Point(postion[0]);
         if(direction == HEAD_UP)
         {
-            postion[0].y-=Data.DEFAULT_BODY_SIZE;
-            if(postion[0].y<Data.DEFAULT_TOP)
+            point.y-=Data.DEFAULT_BODY_SIZE;
+            if(point.y<Data.DEFAULT_TOP)
             {
-                postion[0].y=Data.DEFAULT_BOTTOM-Data.DEFAULT_BODY_SIZE;
+                point.y=Data.DEFAULT_BOTTOM-Data.DEFAULT_BODY_SIZE;
             }
         }
         else if(direction == HEAD_DOWN)
         {
-            postion[0].y+=Data.DEFAULT_BODY_SIZE;
-            if(postion[0].y>(Data.DEFAULT_BOTTOM-Data.DEFAULT_BODY_SIZE))
+            point.y+=Data.DEFAULT_BODY_SIZE;
+            if(point.y>(Data.DEFAULT_BOTTOM-Data.DEFAULT_BODY_SIZE))
             {
-                postion[0].y=Data.DEFAULT_TOP;
+                point.y=Data.DEFAULT_TOP;
             }
         }
         else if(direction == HEAD_LEFT)
         {
-            postion[0].x-=Data.DEFAULT_BODY_SIZE;
-            if(postion[0].x<Data.DEFAULT_LEFT)
+            point.x-=Data.DEFAULT_BODY_SIZE;
+            if(point.x<Data.DEFAULT_LEFT)
             {
-                postion[0].x=Data.DEFAULT_RIGHT-Data.DEFAULT_BODY_SIZE;
+                point.x=Data.DEFAULT_RIGHT-Data.DEFAULT_BODY_SIZE;
             }
         }
         else if(direction == HEAD_RIGHT)
         {
-            postion[0].x+=Data.DEFAULT_BODY_SIZE;
-            if(postion[0].x>(Data.DEFAULT_RIGHT-Data.DEFAULT_BODY_SIZE))
+            point.x+=Data.DEFAULT_BODY_SIZE;
+            if(point.x>(Data.DEFAULT_RIGHT-Data.DEFAULT_BODY_SIZE))
             {
-                postion[0].x=Data.DEFAULT_LEFT;
+                point.x=Data.DEFAULT_LEFT;
             }
         }
+        return point;
+    }
 
+    public boolean move()
+    {
+        //判断移动是否失败
+        Point point=getNewHead();
+        for (int i=1;i<length;i++) {
+            if(postion[i].x == point.x && postion[i].y==point.y)
+                return false;
+        }
+
+        for (int i=length;i>0;i--)
+        {
+            postion[i].x=postion[i-1].x;
+            postion[i].y=postion[i-1].y;
+        }
+        postion[0].x=point.x;
+        postion[0].y=point.y;
+
+        return true;
+
+    }
+
+    //判断蛇头是否遇到食物
+    public boolean isFindFood(Food food)
+    {
+        Point foodPoint=food.getPoint();
+        if(postion[0].x==foodPoint.x && postion[0].y==foodPoint.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void paint(Component c, Graphics g)

@@ -14,6 +14,7 @@ public class Data {
     public static final int DEFAULT_RIGHT=DEFAULT_LEFT+DEFAULT_WIDTH;
     public static final int DEFAULT_BOTTOM=DEFAULT_TOP+DEFAULT_HEIGHT;
     public static final int DEFAULT_BODY_SIZE=25;
+    public static final int DEFAULT_SPEED=200;
     public static ImageIcon up=new ImageIcon("statics/up.png");
     public static ImageIcon left=new ImageIcon("statics/left.png");
     public static ImageIcon right=new ImageIcon("statics/right.png");
